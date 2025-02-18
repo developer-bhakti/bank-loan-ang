@@ -3,7 +3,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { BankerListComponent } from './pages/banker-list/banker-list.component';
 import { CustomerListComponent } from './pages/customer-list/customer-list.component';
 import { LoanApplicationListComponent } from './pages/loan-application-list/loan-application-list.component';
-import { NewLoginFormComponent } from './pages/new-loan-form/new-login-form.component';
 import { NewLoanFormComponent } from './pages/new-loan-form/new-loan-form.component';
 
 export const routes: Routes = [
