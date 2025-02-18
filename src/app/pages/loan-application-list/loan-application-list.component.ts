@@ -1,11 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgModule } from '@angular/core';
 import { MasterService } from '../../services/master.service';
 import { IAPIResponse, IApplicationList } from '../../model/loan';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-loan-application-list',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './loan-application-list.component.html',
   styleUrl: './loan-application-list.component.css'
 })
@@ -16,9 +18,9 @@ export class LoanApplicationListComponent {
 
   constructor() {
     if(this.masterSrv.loggedUserData.role == "Customer") {
-
+     this.getCustomerApplication();
     } else {
-
+      this.getAssignedApplications();
     }
   }
 
@@ -31,6 +33,17 @@ export class LoanApplicationListComponent {
   getAssignedApplications() {
     this.masterSrv.getApplicationsAssign(this.masterSrv.loggedUserData.userId).subscribe((res:IAPIResponse) => {
       this.applicationList = res.data
+    })
+  }
+
+  setStatus(event: any, panNo:string ) {
+    this.masterSrv.changeStatus(panNo,event.target.value ).subscribe((res:IAPIResponse) => {
+      if (res.result) {
+        alert("Status Changed")
+      } else {
+        alert(res.message);
+      }
+
     })
   }
 }

@@ -47,4 +47,5 @@ export interface IApplicationList {
   employmentStatus: string
   customerPhone: string
   assignedToBankEmployee: string
+  panCard: string
 }

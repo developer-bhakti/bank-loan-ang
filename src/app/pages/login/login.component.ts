@@ -5,6 +5,7 @@ import { Component, inject, signal, PLATFORM_ID, Inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { MasterService } from '../../services/master.service';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +19,12 @@ export class LoginComponent {
   showRegisterForm = signal<boolean>(false);
   http = inject(HttpClient);
   router = inject(Router);
-  isBrowser: boolean;
+  // isBrowser: boolean;
+  masterSrv = inject(MasterService)
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
+  // constructor(@Inject(PLATFORM_ID) private platformId: object) {
+  //   this.isBrowser = isPlatformBrowser(platformId);
+  // }
 
   customerObj: any = {
     "userId": 0,
@@ -51,32 +53,24 @@ export class LoginComponent {
         }
       },
       error => {
-        alert("Network Error");
-      }
-    );
+        alert("Network Error")
+      })
   }
 
-  onLogin() {
-    if (this.loginForm.invalid) {
-      alert("Please enter valid credentials!");
-      return;
-    }
-
-    const formValue = this.loginForm.value;
-    this.http.post("https://projectapi.gerasim.in/api/BankLoan/login", formValue).subscribe(
-      (res: any) => {
-        if (res.result) {
-          if (this.isBrowser) {
-            sessionStorage.setItem("bankUser", JSON.stringify(res.data));
-          }
+onLogin() {
+  debugger;
+  const formValue = this.loginForm.value;
+  this.http.post("https://projectapi.gerasim.in/api/BankLoan/login", formValue).subscribe((res: any) => {
+    debugger;
+      if (res.result) {
+          sessionStorage.setItem("bankUser", JSON.stringify(res.data));
           this.router.navigateByUrl("application-list");
-        } else {
-          alert(res.message);
-        }
-      },
-      error => {
-        alert("Network Error");
+          this.masterSrv.onLogged$.next(true)
+      } else {
+        alert(res.message);
       }
-    );
+    },error => {
+      alert("Network Error");
+    })
   }
 }

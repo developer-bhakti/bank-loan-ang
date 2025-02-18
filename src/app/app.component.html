@@ -15,13 +15,16 @@
         <li class="nav-item" >
           <a class="nav-link" routerLink="application-list">Applications</a>
         </li>
-        <li class="nav-item" >
-          <a class="nav-link" routerLink="new-loan">New Loan</a>
-        </li>
+        @if (masterSrv.loggedUserData.role == 'Customers') {
+          <li class="nav-item" >
+            <a class="nav-link" routerLink="new-loan">New Loan</a>
+          </li>
+        }
+
       </ul>
-      @if(loggedUserData){
+      @if(masterSrv.loggedUserData){
         <form class="d-flex">
-          <span class="text-white">{{loggedUserData.userName}}</span>
+          <span class="text-white">{{masterSrv.loggedUserData.userName}}</span>
           <button class="btn btn-warning" type="button" routerLink="login" (click)="logOff()">LogOff</button>
         </form>
       } @else {

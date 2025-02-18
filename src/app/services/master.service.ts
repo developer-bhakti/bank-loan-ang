@@ -1,24 +1,29 @@
 import { IAPIResponse, ILoan, IUser } from './../model/loan';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
+import { Subject } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class MasterService {
-  loggedUserData!: IUser;
+
+  onLogged$: Subject<boolean> = new Subject<boolean>();
+
+  loggedUserData!: any;
+
   private http!: HttpClient; // Lazy load HttpClient
 
-  constructor(private injector: Injector) {
+  constructor(private httpr: HttpClient) {
+     this.loggedUserData()
+  }
+
+  readLoggedData() {
     const loggedData = sessionStorage.getItem("bankUser");
-    if (loggedData !== null) {
+    if (loggedData != null) {
       this.loggedUserData = JSON.parse(loggedData);
     }
-
-    // Lazy inject HttpClient to avoid circular dependency
-    setTimeout(() => {
-      this.http = this.injector.get(HttpClient);
-    });
   }
 
   onSaveLoan(obj: ILoan) {
@@ -26,10 +31,14 @@ export class MasterService {
   }
 
   getMyApplication(id: number) {
-    return this.http.get<IAPIResponse>("https://projectapi.gerasim.in/api/BankLoan?customerId=" + id);
+    return this.http.get<IAPIResponse>("https://projectapi.gerasim.in/api/BankLoan/GetMyApplications?customerId=" + id);
   }
 
   getApplicationsAssign(id: number) {
-    return this.http.get<IAPIResponse>("https://projectapi.gerasim.in/api/BankLoan?bankEmployeeId=" + id);
+    return this.http.get<IAPIResponse>("https://projectapi.gerasim.in/api/BankLoan/GetApplicationAssigneedToMe?bankEmployeeId" + id);
+  }
+
+  changeStatus(panNo: string, status: string) {
+    return this.http.get<IAPIResponse>("https://projectapi.gerasim.in/api/BankLoan/CheckApplicationStatus?panNo="+panNo+"&status=" + status);
   }
 }
