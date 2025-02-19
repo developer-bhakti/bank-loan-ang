@@ -6,32 +6,33 @@
     </button>
     <div class="collapse navbar-collapse" id="mynavbar">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item" >
-          <a class="nav-link active" routerLink="bankerList">Bankers </a>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="bankerList">Bankers</a>
         </li>
-        <li class="nav-item" >
+        <li class="nav-item">
           <a class="nav-link" routerLink="customerlist">Customers</a>
         </li>
-        <li class="nav-item" >
+        <li class="nav-item">
           <a class="nav-link" routerLink="application-list">Applications</a>
         </li>
-        @if (masterSrv.loggedUserData.role == 'Customers') {
-          <li class="nav-item" >
-            <a class="nav-link" routerLink="new-loan">New Loan</a>
-          </li>
-        }
-
+        <!-- <li class="nav-item">
+          <a class="nav-link" routerLink="new-loan">New Loan</a>
+        </li> -->
+        <li class="nav-item" *ngIf="masterSrv.loggedUserData?.role === 'Customers'">  <a class="nav-link" routerLink="new-loan">New Loan</a>
+        </li>
       </ul>
-      @if(masterSrv.loggedUserData){
-        <form class="d-flex">
-          <span class="text-white">{{masterSrv.loggedUserData.userName}}</span>
+
+      <ng-container *ngIf="masterSrv.loggedUserData; else loginTemplate">  <form class="d-flex">
+          <span class="text-white">{{ masterSrv.loggedUserData.userName }}</span>
           <button class="btn btn-warning" type="button" routerLink="login" (click)="logOff()">LogOff</button>
         </form>
-      } @else {
-        <form class="d-flex">
+      </ng-container>
+
+      <ng-template #loginTemplate>  <form class="d-flex">
           <button class="btn btn-primary" type="button" routerLink="login">Login</button>
         </form>
-      }
+      </ng-template>
+
     </div>
   </div>
 </nav>
